@@ -1,20 +1,20 @@
 // Show an object on the screen.
 function showObject(obj) {
-  const pre = document.getElementById('response');
+  const pre = document.getElementById("response");
   const preParent = pre.parentElement;
   pre.innerText = JSON.stringify(obj, null, 4);
-  preParent.classList.add('flashing');
+  preParent.classList.add("flashing");
   setTimeout(() => {
-    preParent.classList.remove('flashing');
+    preParent.classList.remove("flashing");
   }, 300);
 }
 
 function showResponse(response) {
-  response.json().then(data => {
+  response.json().then((data) => {
     showObject({
       data,
       status: response.status,
-      statusText: response.statusText
+      statusText: response.statusText,
     });
   });
 }
@@ -28,24 +28,29 @@ function showResponse(response) {
 
 // Map form (by id) to the function that should be called on submit
 const formsAndHandlers = {
-  'create-user': createUser,
-  'delete-user': deleteUser,
-  'change-username': changeUsername,
-  'change-password': changePassword,
-  'sign-in': signIn,
-  'sign-out': signOut,
-  'view-all-freets': viewAllFreets,
-  'view-freets-by-author': viewFreetsByAuthor,
-  'create-freet': createFreet,
-  'edit-freet': editFreet,
-  'delete-freet': deleteFreet
+  "create-user": createUser,
+  "delete-user": deleteUser,
+  "change-username": changeUsername,
+  "change-password": changePassword,
+  "sign-in": signIn,
+  "sign-out": signOut,
+  "view-all-freets": viewAllFreets,
+  "view-freets-by-author": viewFreetsByAuthor,
+  "create-freet": createFreet,
+  "edit-freet": editFreet,
+  "delete-freet": deleteFreet,
+  "create-circle": createCircle,
+  "view-all-circles": viewAllCircles,
+  "view-circle-by-user": viewCircleByUser,
+  "update-circle": updateCircle,
 };
 
 // Attach handlers to forms
 function init() {
   Object.entries(formsAndHandlers).forEach(([formID, handler]) => {
     const form = document.getElementById(formID);
-    form.onsubmit = e => {
+    form.onsubmit = (e) => {
+      // console.log("form is", form, formID);
       e.preventDefault();
       const formData = new FormData(form);
       handler(Object.fromEntries(formData.entries()));
