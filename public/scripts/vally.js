@@ -5,20 +5,20 @@
  * e.g. for createUser, fields has properites 'username' and 'password'
  */
 
-function viewAllFreets(fields) {
-  console.log("view all");
-  fetch("/api/freets").then(showResponse).catch(showResponse);
+const vallyEndpoint = "/api/vally";
+
+function viewAllVally(fields) {
+  fetch(vallyEndpoint).then(showResponse).catch(showResponse);
 }
 
-function viewFreetsByUsername(fields) {
-  console.log("by username", fields);
-  fetch(`/api/freets?username=${fields.username}`)
+function viewVallyByUsername(fields) {
+  fetch(`${vallyEndpoint}/${fields.username}`)
     .then(showResponse)
     .catch(showResponse);
 }
 
-function createFreet(fields) {
-  fetch("/api/freets", {
+function vallyAFreet(fields) {
+  fetch(vallyEndpoint, {
     method: "POST",
     body: JSON.stringify(fields),
     headers: { "Content-Type": "application/json" },
@@ -27,8 +27,8 @@ function createFreet(fields) {
     .catch(showResponse);
 }
 
-function editFreet(fields) {
-  fetch(`/api/freets/${fields.id}`, {
+function editVally(fields) {
+  fetch(`${vallyEndpoint}/${fields.vallyId}`, {
     method: "PUT",
     body: JSON.stringify(fields),
     headers: { "Content-Type": "application/json" },
@@ -37,8 +37,12 @@ function editFreet(fields) {
     .catch(showResponse);
 }
 
-function deleteFreet(fields) {
-  fetch(`/api/freets/${fields.id}`, { method: "DELETE" })
+function deleteVally(fields) {
+  fetch(`${vallyEndpoint}/${fields.vallyId}`, {
+    method: "DELETE",
+    body: JSON.stringify(fields),
+    headers: { "Content-Type": "application/json" },
+  })
     .then(showResponse)
     .catch(showResponse);
 }

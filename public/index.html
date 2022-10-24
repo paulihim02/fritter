@@ -7,6 +7,11 @@
     <script src="/scripts/user.js"></script>
     <script src="/scripts/circles.js"></script>
     <script src="/scripts/freet.js"></script>
+    <script src="/scripts/refreets.js"></script>
+    <script src="/scripts/follow.js"></script>
+    <script src="/scripts/comments.js"></script>
+    <script src="/scripts/circleMe.js"></script>
+    <script src="/scripts/vally.js"></script>
     <script src="/scripts/index.js"></script>
   </head>
 
@@ -19,174 +24,533 @@
       <section id="operations-container">
         <h2>Operations:</h2>
         <div class="scrollbox">
-          <form id="create-user">
-            <h3>Create User</h3>
-            <div>
-              <label for="username">Username:</label>
-              <input id="username" name="username" />
-            </div>
-            <div>
-              <label for="password">Password:</label>
-              <input id="password" name="password" />
-            </div>
-            <input type="submit" value="Create User" />
-          </form>
+          <input
+            type="submit"
+            value="User Concept"
+            onclick="onlyShowOne('user')"
+          />
+          <input
+            type="submit"
+            value="Follow Concept"
+            onclick="onlyShowOne('follow')"
+          />
+          <input
+            type="submit"
+            value="Freet Concept"
+            onclick="onlyShowOne('freet')"
+          />
+          <input
+            type="submit"
+            value="Refreet Concept"
+            onclick="onlyShowOne('refreet')"
+          />
+          <input
+            type="submit"
+            value="Comment Concept"
+            onclick="onlyShowOne('comment')"
+          />
+          <input
+            type="submit"
+            value="Circle Concept"
+            onclick="onlyShowOne('circle')"
+          />
+          <input
+            type="submit"
+            value="CircleMe Concept"
+            onclick="onlyShowOne('circleMe')"
+          />
+          <input
+            type="submit"
+            value="Vally Concept"
+            onclick="onlyShowOne('vally')"
+          />
+          <div id="user-concept-content" style="display: none">
+            <form id="create-user">
+              <h3>Create User</h3>
+              <div>
+                <label for="username">Username:</label>
+                <input id="username" name="username" />
+              </div>
+              <div>
+                <label for="password">Password:</label>
+                <input id="password" name="password" />
+              </div>
+              <input type="submit" value="Create User" />
+            </form>
 
-          <form id="delete-user">
-            <h3>Delete User</h3>
-            <input type="submit" value="Delete User" />
-          </form>
+            <form id="sign-in">
+              <h3>Sign In</h3>
+              <div>
+                <label for="username">Username:</label>
+                <input id="username" name="username" />
+              </div>
+              <div>
+                <label for="password">Password:</label>
+                <input id="password" name="password" />
+              </div>
+              <input type="submit" value="Sign In" />
+            </form>
 
-          <form id="change-username">
-            <h3>Change Username</h3>
-            <div>
-              <label for="username">New Username:</label>
-              <input id="username" name="username" />
-            </div>
-            <input type="submit" value="Change Username" />
-          </form>
+            <form id="sign-out">
+              <h3>Sign Out</h3>
+              <input type="submit" value="Sign out" />
+            </form>
 
-          <form id="change-password">
-            <h3>Change Password</h3>
-            <div>
-              <label for="password">New Password:</label>
-              <input id="password" name="password" />
-            </div>
-            <input type="submit" value="Change Password" />
-          </form>
+            <form id="delete-user">
+              <h3>Delete User</h3>
+              <input type="submit" value="Delete User" />
+            </form>
 
-          <form id="sign-in">
-            <h3>Sign In</h3>
-            <div>
-              <label for="username">Username:</label>
-              <input id="username" name="username" />
-            </div>
-            <div>
-              <label for="password">Password:</label>
-              <input id="password" name="password" />
-            </div>
-            <input type="submit" value="Sign In" />
-          </form>
+            <form id="change-username">
+              <h3>Change Username</h3>
+              <div>
+                <label for="username">New Username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="Change Username" />
+            </form>
 
-          <form id="sign-out">
-            <h3>Sign Out</h3>
-            <input type="submit" value="Sign out" />
-          </form>
+            <form id="change-password">
+              <h3>Change Password</h3>
+              <div>
+                <label for="password">New Password:</label>
+                <input id="password" name="password" />
+              </div>
+              <input type="submit" value="Change Password" />
+            </form>
 
-          <form id="view-all-freets">
-            <h3>View All Freets</h3>
-            <input type="submit" value="View All Freets" />
-          </form>
+            <form id="follow-user">
+              <h3>Follow User</h3>
+              <div>
+                <label for="follower">FollowerID:</label>
+                <input id="follower" name="follower" />
+              </div>
+              <input type="submit" value="Follow User" />
+            </form>
+          </div>
 
-          <form id="view-freets-by-author">
-            <h3>View Freets By Author</h3>
-            <div>
-              <label for="author">Author:</label>
-              <input id="author" name="author" />
-            </div>
-            <input type="submit" value="View Freets By Author" />
-          </form>
+          <div id="freet-concept-content" style="display: none">
+            <form id="view-all-freets">
+              <h3>View All Freets</h3>
+              <input type="submit" value="View All Freets" />
+            </form>
 
-          <form id="create-freet">
-            <h3>Create Freet</h3>
-            <div>
-              <label for="content">Content:</label>
-              <textarea id="content" name="content"></textarea>
-            </div>
-            <input type="submit" value="Create Freet" />
-          </form>
+            <form id="view-freets-by-username">
+              <h3>view freets of user</h3>
+              <div>
+                <label for="username">username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="view freets" />
+            </form>
 
-          <form id="edit-freet">
-            <h3>Edit Freet</h3>
-            <div>
-              <label for="id">ID:</label>
-              <input id="id" name="id" />
-            </div>
-            <div>
-              <label for="content">Content:</label>
-              <textarea id="content" name="content"></textarea>
-            </div>
-            <input type="submit" value="Edit Freet" />
-          </form>
+            <form id="create-freet">
+              <h3>Create Freet</h3>
+              <div>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content"></textarea>
+              </div>
+              <input type="submit" value="Create Freet" />
+            </form>
 
-          <form id="delete-freet">
-            <h3>Delete Freet</h3>
-            <div>
-              <label for="id">ID:</label>
-              <input id="id" name="id" />
-            </div>
-            <input type="submit" value="Delete Freet" />
-          </form>
+            <form id="edit-freet">
+              <h3>Edit Freet</h3>
+              <div>
+                <label for="id">ID:</label>
+                <input id="id" name="id" />
+              </div>
+              <div>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content"></textarea>
+              </div>
+              <input type="submit" value="Edit Freet" />
+            </form>
+
+            <form id="delete-freet">
+              <h3>Delete Freet</h3>
+              <div>
+                <label for="id">ID:</label>
+                <input id="id" name="id" />
+              </div>
+              <input type="submit" value="Delete Freet" />
+            </form>
+          </div>
+
+          <div id="circle-concept-content" style="display: none">
+            <form id="create-circle">
+              <h3>Create Circle</h3>
+              <label for="rank">
+                Rank
+                <select name="rank">
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </label>
+
+              <input type="submit" value="Create Circle" />
+            </form>
+            <form id="view-all-circles">
+              <h3>view all circles</h3>
+              <input type="submit" value="View All Circles" />
+            </form>
+
+            <form id="view-circle-by-user">
+              <h3>view circle by user</h3>
+              <label for="username"
+                >username <input id="username" name="username" type="text" />
+              </label>
+
+              <label for="rank"
+                >rank
+                <select name="rank">
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </label>
+              <input type="submit" value="view circles" />
+            </form>
+
+            <form id="add-user-to-circle">
+              <h3>add user to circle</h3>
+
+              <label for="rank"
+                >rank
+                <select name="rank">
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </label>
+
+              <label for="username"
+                >username <input id="username" name="username" type="text" />
+              </label>
+
+              <input type="submit" value="update circle" />
+            </form>
+            <form id="remove-user-from-circle">
+              <h3>remove user from circle</h3>
+
+              <label for="rank"
+                >rank
+                <select name="rank">
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </label>
+
+              <label for="username"
+                >username <input id="username" name="username" type="text" />
+              </label>
+              <input type="submit" value="update circle" />
+            </form>
+            <form id="delete-circle">
+              <h3>delete circle</h3>
+              <label for="rank">
+                rank
+                <select name="rank">
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                </select>
+              </label>
+
+              <input type="submit" value="delete circle" />
+            </form>
+          </div>
+
+          <div id="refreet-concept-content" style="display: none">
+            <form id="view-all-refreets">
+              <h3>View All Refreets</h3>
+              <input type="submit" value="View All Refreets" />
+            </form>
+
+            <form id="view-refreets-by-username">
+              <h3>view refreets of user</h3>
+              <div>
+                <label for="username">username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="view refreets" />
+            </form>
+
+            <form id="create-refreet">
+              <h3>create-refreet</h3>
+              <div>
+                <label for="freetId">freet ID:</label>
+                <input id="freetId" name="freetId" />
+
+                <label for="caption">caption:</label>
+                <textarea id="caption" name="caption"></textarea>
+              </div>
+              <input type="submit" value="create refreet" />
+            </form>
+
+            <form id="edit-refreet">
+              <h3>edit refreet</h3>
+              <div>
+                <label for="refreetID">refreet ID:</label>
+                <input id="refreetID" name="refreetID" />
+              </div>
+              <div>
+                <label for="caption">caption:</label>
+                <textarea id="caption" name="caption"></textarea>
+              </div>
+              <input type="submit" value="edit refreet" />
+            </form>
+
+            <form id="delete-refreet">
+              <h3>delete refreet</h3>
+              <div>
+                <label for="refreetID">refreet ID:</label>
+                <input id="refreetID" name="refreetID" />
+              </div>
+              <input type="submit" value="delete refreet" />
+            </form>
+          </div>
+
+          <div id="follow-concept-content" style="display: none">
+            <form id="view-all-follows">
+              <h3>view all follows</h3>
+              <input type="submit" value="view all follows" />
+            </form>
+
+            <form id="view-follows-by-username">
+              <h3>view follows of user</h3>
+              <div>
+                <label for="username">username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="view follows" />
+            </form>
+
+            <form id="follow-someone">
+              <h3>follow someone</h3>
+              <div>
+                <label for="userId">ID of person to follow:</label>
+                <input id="userId" name="userId" />
+              </div>
+              <input type="submit" value="follow someone" />
+            </form>
+
+            <form id="delete-follow">
+              <h3>delete (unfollow) someone</h3>
+              <div>
+                <label for="unfollowId"
+                  >ID of Follow to delete (unfollow):</label
+                >
+                <input id="unfollowId" name="unfollowId" />
+              </div>
+              <input type="submit" value="delete follow" />
+            </form>
+          </div>
+
+          <div id="comment-concept-content" style="display: none">
+            <form id="view-all-comments">
+              <h3>view all comments</h3>
+              <input type="submit" value="view all comments" />
+            </form>
+
+            <form id="view-comments-by-username">
+              <h3>view comments of user</h3>
+              <div>
+                <label for="username">username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="view comments" />
+            </form>
+
+            <form id="comment-on-freet">
+              <h3>comment on freet</h3>
+              <div>
+                <div>
+                  <label for="freetId">ID of freet:</label>
+                  <input id="freetId" name="freetId" />
+                </div>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content"></textarea>
+              </div>
+              <input type="submit" value="comment on freet" />
+            </form>
+
+            <form id="comment-on-comment">
+              <h3>comment on comment</h3>
+              <div>
+                <div>
+                  <label for="commentId">ID of comment:</label>
+                  <input id="commentId" name="commentId" />
+                </div>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content"></textarea>
+              </div>
+              <input type="submit" value="comment on comment" />
+            </form>
+
+            <form id="edit-comment">
+              <h3>edit comment</h3>
+              <div>
+                <label for="commentId">ID:</label>
+                <input id="commentId" name="commentId" />
+              </div>
+              <div>
+                <label for="content">Content:</label>
+                <textarea id="content" name="content"></textarea>
+              </div>
+              <input type="submit" value="edit comment" />
+            </form>
+
+            <form id="delete-comment">
+              <h3>delete comment</h3>
+              <div>
+                <label for="commentId">ID:</label>
+                <input id="commentId" name="commentId" />
+              </div>
+              <input type="submit" value="delete comment" />
+            </form>
+          </div>
+
+          <div id="circleMe-concept-content" style="display: none">
+            <form id="view-all-circleMe">
+              <h3>view all circleMe</h3>
+              <input type="submit" value="view all circleMe" />
+            </form>
+
+            <form id="view-circleMe-by-username">
+              <h3>view circleMe of user</h3>
+              <div>
+                <label for="username">username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="view circleMe" />
+            </form>
+
+            <form id="create-circleMe">
+              <h3>create circleMe</h3>
+              <div>
+                <label for="circleId">id of circle to use:</label>
+                <input id="circleId" name="circleId" />
+
+                <label for="freetId">id of freet to use:</label>
+                <input id="freetId" name="freetId" />
+
+                set permissions:
+                <span>
+                  <label for="canShare">canShare:</label>
+                  <input type="checkbox" id="canShare" name="canShare" />
+
+                  <label for="canRefreet">canRefreet:</label>
+                  <input id="canRefreet" name="canRefreet" type="checkbox" />
+
+                  <label for="canComment">canComment:</label>
+                  <input type="checkbox" id="canComment" name="canComment" />
+                </span>
+              </div>
+              <input type="submit" value="create circleMe" />
+            </form>
+
+            <form id="edit-circleMe">
+              <h3>edit circleMe</h3>
+              <label for="circleMeId">circleMe ID:</label>
+              <input id="circleMeId" name="circleMeId" />
+              set access permissions:
+              <span>
+                <label for="canShare">canShare:</label>
+                <input type="checkbox" id="canShare" name="canShare" />
+
+                <label for="canRefreet">canRefreet:</label>
+                <input id="canRefreet" name="canRefreet" type="checkbox" />
+
+                <label for="canComment">canComment:</label>
+                <input type="checkbox" id="canComment" name="canComment" />
+              </span>
+              <input type="submit" value="edit circleMe" />
+            </form>
+
+            <form id="delete-circleMe">
+              <h3>delete circleMe</h3>
+              <div>
+                <label for="circleMeId">id of circleMe:</label>
+                <input id="circleMeId" name="circleMeId" />
+              </div>
+              <input type="submit" value="delete circleMe" />
+            </form>
+          </div>
+
+          <div id="vally-concept-content" style="display: none">
+            <form id="view-all-vally">
+              <h3>view all vally</h3>
+              <input type="submit" value="view all vally" />
+            </form>
+
+            <form id="view-vally-by-username">
+              <h3>view circleMe of user</h3>
+              <div>
+                <label for="username">username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="view vally" />
+            </form>
+
+            <form id="vally-a-freet">
+              <h3>vally a freet</h3>
+              <div>
+                <label for="freetId">id of freet to vally:</label>
+                <input id="freetId" name="freetId" />
+
+                <label for="points">vally strength (-5 to 5)</label>
+                <select name="points">
+                  <option>-5</option>
+                  <option>-4</option>
+                  <option>-4</option>
+                  <option>-3</option>
+                  <option>-1</option>
+                  <option selected>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </select>
+              </div>
+              <input type="submit" value="vally the freet" />
+            </form>
+
+            <form id="edit-vally">
+              <h3>edit vally</h3>
+              <label for="vallyId">vally ID:</label>
+              <input id="vallyId" name="vallyId" />
+
+              <label for="points">vally strength (-5 to 5)</label>
+              <select name="points">
+                <option>-5</option>
+                <option>-4</option>
+                <option>-4</option>
+                <option>-3</option>
+                <option>-1</option>
+                <option selected>0</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+              <input type="submit" value="edit vally" />
+            </form>
+
+            <form id="delete-vally">
+              <h3>delete vally</h3>
+              <div>
+                <label for="vallyId">id of vally:</label>
+                <input id="vallyId" name="vallyId" />
+              </div>
+              <input type="submit" value="delete vally" />
+            </form>
+          </div>
         </div>
       </section>
-      <div>
-        <br />
-        <br />
-        <br />
-        <br />
-
-        <form id="create-circle">
-          <h3>Create Circle</h3>
-          <label for="level">
-            Level
-            <select name="level">
-              <option>0</option>
-              <option>1</option>
-              <option>2</option>
-            </select>
-          </label>
-
-          <input type="submit" value="Create Circle" />
-        </form>
-        <form id="view-all-circles">
-          <h3>View All Circles</h3>
-          <input type="submit" value="View All Circles" />
-        </form>
-
-        <form id="view-circle-by-user">
-          <h3>View Circle By User</h3>
-          <label for="username"
-            >username <input id="username" name="username" type="text" />
-          </label>
-
-          <label for="level"
-            >Level
-            <select name="level">
-              <option>0</option>
-              <option>1</option>
-              <option>2</option>
-            </select>
-          </label>
-          <input type="submit" value="View Circles" />
-        </form>
-
-        <form id="update-circle">
-          <h3>Update Circle</h3>
-
-          <label for="level"
-            >Level
-            <select name="level">
-              <option>0</option>
-              <option>1</option>
-              <option>2</option>
-            </select>
-          </label>
-
-          <label for="removeUser">
-            <select name="removeUser">
-              <option value="false">Add User</option>
-              <option value="true">Remove User</option>
-            </select>
-          </label>
-
-          <label for="username"
-            >username <input id="username" name="username" type="text" />
-          </label>
-
-          <input type="submit" value="Update Circle" />
-        </form>
-      </div>
-
       <section>
         <h2>Response:</h2>
         <div class="scrollbox">

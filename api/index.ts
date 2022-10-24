@@ -12,6 +12,12 @@ import * as userValidator from "../user/middleware";
 import { userRouter } from "../user/router";
 import { freetRouter } from "../freet/router";
 import { circlesRouter } from "../circles/router";
+import { refreetRouter } from "../refreet/router";
+import { shareRouter } from "../share/router";
+import { circleMeRouter } from "../circleme/router";
+import { vallyRouter } from "../vally/router";
+import { commentRouter } from "../comment/router";
+import { followRouter } from "../follow/router";
 
 // Load environmental variables
 dotenv.config({});
@@ -79,7 +85,13 @@ app.get("/", (req: Request, res: Response) => {
 // Add routers from routes folder
 app.use("/api/users", userRouter);
 app.use("/api/freets", freetRouter);
+app.use("/api/follows", followRouter);
 app.use("/api/circles", circlesRouter);
+app.use("/api/refreets", refreetRouter);
+app.use("/api/shares", shareRouter);
+app.use("/api/comments", commentRouter);
+app.use("/api/circleme", circleMeRouter);
+app.use("/api/vally", vallyRouter);
 
 // Catch all the other routes and display error message
 app.all("*", (req: Request, res: Response) => {

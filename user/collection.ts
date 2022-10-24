@@ -1,6 +1,7 @@
-import type { HydratedDocument, Types } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 import type { User } from "./model";
 import UserModel from "./model";
+import { deduplicate } from "./util";
 
 /**
  * This file contains a class with functionality to interact with users stored
@@ -22,12 +23,7 @@ class UserCollection {
     username: string,
     password: string
   ): Promise<HydratedDocument<User>> {
-    const dateJoined = new Date();
-
-    const user = new UserModel({ username, password, dateJoined });
-    console.log("adding user");
-    await user.save(); // Saves user to MongoDB
-    return user;
+    return new UserModel({ username, password }).save().then((user) => user);
   }
 
   /**
@@ -85,16 +81,25 @@ class UserCollection {
     userDetails: any
   ): Promise<HydratedDocument<User>> {
     const user = await UserModel.findOne({ _id: userId });
-    if (userDetails.password) {
-      user.password = userDetails.password as string;
+
+    const { password, username, followers, following } = userDetails;
+
+    if (password) {
+      user.password = password as string;
     }
 
-    if (userDetails.username) {
-      user.username = userDetails.username as string;
+    if (username) {
+      user.username = username as string;
     }
 
-    await user.save();
-    return user;
+    if (followers) {
+      user.followers = deduplicate(user.followers, followers);
+    }
+    if (following) {
+      user.following = deduplicate(user.following, following);
+    }
+
+    return await user.save();
   }
 
   /**

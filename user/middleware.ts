@@ -77,13 +77,11 @@ const isAccountExists = async (
   };
 
   if (!username || !password) {
-    res
-      .status(400)
-      .json({
-        error: `Missing ${
-          username ? "password" : "username"
-        } credentials for sign in.`,
-      });
+    res.status(400).json({
+      error: `Missing ${
+        username ? "password" : "username"
+      } credentials for sign in.`,
+    });
     return;
   }
 
@@ -154,33 +152,63 @@ const isUserLoggedOut = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * Checks if a user with userId as author id in req.query exists
+ * Checks if a user with req.query username exists
  */
-const isAuthorExists = async (
+const isUsernameExists = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.query.author) {
-    res.status(400).json({
+  // const { username } = req.query;
+  const username =
+    req.query.username || req.body.username || req.params.username;
+
+  if (!username) {
+    return res.status(400).json({
       error: "Provided author username must be nonempty.",
     });
-    return;
   }
 
-  const user = await UserCollection.findOneByUsername(
-    req.query.author as string
-  );
+  const user = await UserCollection.findOneByUsername(username as string);
   if (!user) {
-    res.status(404).json({
-      error: `A user with username ${
-        req.query.author as string
-      } does not exist.`,
+    return res.status(404).json({
+      error: `A user with this username does not exist.`,
     });
-    return;
   }
 
-  next();
+  return next();
+};
+
+/**
+ * Checks if a user with req.query id exists
+ */
+const isUserIdExists = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.query.userId || req.body.userId || req.params.userId;
+
+  if (!userId) {
+    return res.status(400).json({
+      error: "Provided author id must be nonempty.",
+    });
+  }
+
+  if (!Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({
+      error: `A user with this id does not exist.`,
+    });
+  }
+
+  const user = await UserCollection.findOneByUserId(userId as string);
+  if (!user) {
+    return res.status(404).json({
+      error: `A user with this id does not exist.`,
+    });
+  }
+
+  return next();
 };
 
 export {
@@ -189,7 +217,8 @@ export {
   isUserLoggedOut,
   isUsernameNotAlreadyInUse,
   isAccountExists,
-  isAuthorExists,
+  isUsernameExists,
+  isUserIdExists,
   isValidUsername,
   isValidPassword,
 };

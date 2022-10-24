@@ -13,15 +13,15 @@ function viewCircleByUser(fields) {
   console.log(
     "in view circle",
     fields,
-    `/api/circles/${fields.username}/${fields.level}`
+    `/api/circles/${fields.username}/${fields.rank}`
   );
-  fetch(`/api/circles/${fields.username}/${fields.level}`)
+  fetch(`/api/circles/${fields.username}/${fields.rank}`)
     .then(showResponse)
     .catch(showResponse);
 }
 
 function createCircle(fields) {
-  console.log("fields are", fields, fields.level);
+  console.log("fields are", fields, fields.rank);
   fetch("/api/circles", {
     method: "POST",
     body: JSON.stringify(fields),
@@ -34,10 +34,20 @@ function createCircle(fields) {
     .catch(showResponse);
 }
 
-function updateCircle(fields) {
-  fetch(`/api/circles/`, {
+function addUserToCircle(fields) {
+  fetch(`/api/circles`, {
     method: "PUT",
-    body: JSON.stringify(fields),
+    body: JSON.stringify({ ...fields, add: true }),
+    headers: { "Content-Type": "application/json" },
+  })
+    .then(showResponse)
+    .catch(showResponse);
+}
+
+function removeUserFromCircle(fields) {
+  fetch(`/api/circles`, {
+    method: "PUT",
+    body: JSON.stringify({ ...fields, add: false }),
     headers: { "Content-Type": "application/json" },
   })
     .then(showResponse)
@@ -45,7 +55,11 @@ function updateCircle(fields) {
 }
 
 function deleteCircle(fields) {
-  fetch(`/api/circles/${fields.id}`, { method: "DELETE" })
+  fetch("/api/circles", {
+    method: "DELETE",
+    body: JSON.stringify(fields),
+    headers: { "Content-Type": "application/json" },
+  })
     .then(showResponse)
     .catch(showResponse);
 }

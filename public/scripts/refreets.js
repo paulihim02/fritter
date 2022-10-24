@@ -5,20 +5,20 @@
  * e.g. for createUser, fields has properites 'username' and 'password'
  */
 
-function viewAllFreets(fields) {
-  console.log("view all");
-  fetch("/api/freets").then(showResponse).catch(showResponse);
+const refreetEndpoint = "/api/refreets";
+
+function viewAllRefreets(fields) {
+  fetch(refreetEndpoint).then(showResponse).catch(showResponse);
 }
 
-function viewFreetsByUsername(fields) {
-  console.log("by username", fields);
-  fetch(`/api/freets?username=${fields.username}`)
+function viewRefreetsByUsername(fields) {
+  fetch(`${refreetEndpoint}?username=${fields.username}`)
     .then(showResponse)
     .catch(showResponse);
 }
 
-function createFreet(fields) {
-  fetch("/api/freets", {
+function createRefreet(fields) {
+  fetch(refreetEndpoint, {
     method: "POST",
     body: JSON.stringify(fields),
     headers: { "Content-Type": "application/json" },
@@ -27,8 +27,8 @@ function createFreet(fields) {
     .catch(showResponse);
 }
 
-function editFreet(fields) {
-  fetch(`/api/freets/${fields.id}`, {
+function editRefreet(fields) {
+  fetch(`${refreetEndpoint}/${fields.refreetID}`, {
     method: "PUT",
     body: JSON.stringify(fields),
     headers: { "Content-Type": "application/json" },
@@ -37,8 +37,8 @@ function editFreet(fields) {
     .catch(showResponse);
 }
 
-function deleteFreet(fields) {
-  fetch(`/api/freets/${fields.id}`, { method: "DELETE" })
+function deleteRefreet(fields) {
+  fetch(`${refreetEndpoint}/${fields.refreetID}`, { method: "DELETE" })
     .then(showResponse)
     .catch(showResponse);
 }

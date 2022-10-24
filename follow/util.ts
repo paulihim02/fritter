@@ -1,14 +1,13 @@
 import type { HydratedDocument } from "mongoose";
 import moment from "moment";
-import type { Freet, PopulatedFreet } from "../freet/model";
+import { PopulatedFollow, Follow } from "./model";
 
 // Update this if you add a property to the Freet type!
-type FreetResponse = {
+type FollowResponse = {
   _id: string;
-  author: string;
-  content: string;
+  user: string;
+  following: string;
   timeStamp: string;
-  dateModified: string;
 };
 
 /**
@@ -27,24 +26,15 @@ const formatDate = (date: Date): string =>
  * @param {HydratedDocument<Freet>} freet - A freet
  * @returns {FreetResponse} - The freet object formatted for the frontend
  */
-const constructFreetResponse = (
-  freet: HydratedDocument<Freet>
-): FreetResponse => {
-  const freetCopy: PopulatedFreet = {
-    ...freet.toObject({
-      versionKey: false, // Cosmetics; prevents returning of __v property
-    }),
-  };
-  const { authorID } = freetCopy;
-  delete freetCopy.authorID;
-
+const constructFollowResponse = (
+  follow: HydratedDocument<PopulatedFollow>
+): FollowResponse => {
   return {
-    ...freetCopy,
-    _id: freetCopy._id.toString(),
-    author: authorID.username.toString(),
-    timeStamp: formatDate(freet.timeStamp),
-    dateModified: formatDate(freet.dateModified),
+    _id: follow._id.toString(),
+    user: follow.personOneId.toString(),
+    following: follow.personTwoId.username.toString(),
+    timeStamp: formatDate(follow.timeStamp),
   };
 };
 
-export { constructFreetResponse };
+export { constructFollowResponse };

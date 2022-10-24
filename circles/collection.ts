@@ -1,145 +1,175 @@
-import type { HydratedDocument, Types } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 import type { Circle } from "./model";
 import FreetModel from "./model";
 import UserCollection from "../user/collection";
 import { User } from "user/model";
 import CircleModel from "./model";
 
-/**
- * This files contains a class that has the functionality to explore freets
- * stored in MongoDB, including adding, finding, updating, and deleting freets.
- * Feel free to add additional operations in this file.
- *
- * Note: HydratedDocument<Freet> is the output of the FreetModel() constructor,
- * and contains all the information in Freet. https://mongoosejs.com/docs/typescript.html
- */
 class CircleCollection {
   /**
    * Add a circle to the collection
    *
-   * @param {string} author - The author (user) of the circle
-   * @param {number} level - The level to add the user to
+   * @param {Types.ObjectId} author - The author (user) of the circle
+   * @param {number} rank - The level to add the user to
    * @return {Promise<HydratedDocument<Circle>>} - The updated Circle
    */
   static async addOne(
-    authorID: Types.ObjectId,
-    level: number,
-    // userIDs: Types.ObjectId[],
-    canShare?: boolean,
-    canRefreet?: boolean,
-    canReply?: boolean
+    ownerID: Types.ObjectId,
+    rank: number
   ): Promise<HydratedDocument<Circle>> {
+    console.log("rank", rank);
     const newCircle = new CircleModel({
-      authorID,
-      level,
-      canShare,
-      canRefreet,
-      canReply,
+      ownerID,
+      rank,
     });
 
-    await newCircle.save();
-
-    return newCircle.populate("authorID");
+    return (await newCircle.save()).populate("ownerID");
   }
 
   /**
-   * Find a circle of specific level by authorId
+   * Get specific circle of user
    *
-   * @param {string} username - The id of the freet to find
-   * @return {Promise<HydratedDocument<Circle>> | Promise<null> } - The freet with the given freetId, if any
+   * @param {Types.ObjectId} ownerID - The ID to get
+   * @param {number} rank - circle rank to get
+   * @return {Promise<HydratedDocument<Circle>> | Promise<null> } - The circle with matching ownerID, if any
    */
   static async findOne(
-    authorID: string | Types.ObjectId,
-    level: number
+    ownerID: string | Types.ObjectId,
+    rank: number
   ): Promise<HydratedDocument<Circle>> {
-    console.log("finding for", authorID, level);
+    console.log("finding Circle for", ownerID, rank);
     return await CircleModel.findOne({
-      authorID,
-      level,
-    }).populate("authorID");
+      ownerID,
+      rank,
+    }).populate("ownerID");
   }
 
   /**
-   * Get all the circles in the database
+   * Get all the circles in DataBase
    *
-   * @return {Promise<HydratedDocument<Circle>[]>} - An array of all of the freets
+   * @return {Promise<HydratedDocument<Circle>[]>} - An array of all the circles
    */
   static async findAll(): Promise<Array<HydratedDocument<Circle>>> {
-    // Retrieves freets and sorts them from most to least recent
-    console.log("finding!", await CircleModel.find({}));
-    // .populate("authorID"));
-    return await CircleModel.find({}).populate("authorID");
+    console.log("finding All Circles!", await CircleModel.find({}));
+
+    return await CircleModel.find({}).populate("ownerID");
   }
 
   /**
    * Get all the circles by given author
    *
-   * @param {string} username - The username of author of the freets
-   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the freets
+   * @param {string} ownerID - The ownerID of author of a circle
+   * @return {Promise<HydratedDocument<Freet>[]>} - Array of circles author owns
    */
-  static async findAllByUsername(
-    username: string
+  static async findAllByownerID(
+    ownerID: string | Types.ObjectId
   ): Promise<Array<HydratedDocument<Circle>>> {
-    const authorID = (await UserCollection.findOneByUsername(username))._id;
-    return CircleModel.find({ authorID }).populate("author");
+    return CircleModel.find({ ownerID }).populate("ownerID");
   }
 
   /**
    * Update a circle with the new content
    *
-   * @param {string} authorID - The owner of the circle to be updated
-   * @param {number} level - the circle level
-   * @param {string} usernameToUpdate - The username to be added/removed
-   * @param {boolean} removeUser - toggle of whether to add or remove a user
-   * @return {Promise<HydratedDocument<Circle>>} - The newly updated freet
+   * @param {string} ownerID - circle owned by this person
+   * @param {number} rank -
+   * @param {string} updateID - The ID to be added/removed
+   * @param {boolean} removeUser - toggle of add or remove a user
+   * @return {Promise<HydratedDocument<Circle>>} - The newly updated circle
    */
-  static async updateOne(
-    authorID: Types.ObjectId,
-    level: number,
-    usernameToUpdate: string,
-    removeUser = false
+  static async update(
+    ownerID: Types.ObjectId,
+    rank: number,
+    updateID: string | Types.ObjectId,
+    add: boolean
   ): Promise<HydratedDocument<Circle>> {
-    console.log("attempting to update user with username:", usernameToUpdate);
-    const userFromString = await UserCollection.findOneByUsername(
-      usernameToUpdate
-    );
-    console.log("user found is", userFromString);
+    console.log("attempting to update user of ID:", updateID);
 
-    console.log("auth ID", authorID, "lvl", level);
-    const circle = await CircleModel.findOne({ authorID, level });
+    // we first get the circle
+    const circle = await this.findOne(ownerID, rank);
+    console.log("circ", circle);
+    // get userIds in the circle
+    const { userIDs } = circle;
+    const objectUpdateID = new Types.ObjectId(updateID);
 
-    if (!circle || !userFromString) {
-      console.log("circle doesn't exist or user not a valid user");
-      console.log(circle, usernameToUpdate);
-      return;
+    if (!UserCollection.findOneByUserId(objectUpdateID)) {
+      return; // do nothing if userID invalid
     }
 
-    console.log("old", circle.userIDs, removeUser);
+    // we always add the user to the array initially (at last position)
+    const updatedUserId = [
+      ...userIDs.filter(
+        (userID) => userID.toString() !== objectUpdateID.toString()
+      ),
+      objectUpdateID,
+    ];
 
-    circle.userIDs = removeUser
-      ? circle.userIDs.filter((userId) =>
-          usernameToUpdate.includes(userId as any)
-        )
-      : [...circle.userIDs, userFromString._id];
-    console.log(...circle.userIDs, userFromString._id);
-    await circle.save();
-    console.log(circle.userIDs);
-    return circle.populate("authorID");
+    console.log("updated User IDs", updatedUserId);
+    !add ? updatedUserId.pop() : "";
+    console.log("updated User IDs", updatedUserId);
+
+    // update circle
+    circle.userIDs = updatedUserId;
+    return await circle.save();
+  }
+
+  /**
+   * Update a circle with the new content
+   *
+   * @param {string} ownerID - circle author owns that user will be removed from
+   * @param {number} rank
+   * @param {string} updateID - The userID to be removed
+   * @return {Promise<HydratedDocument<Circle>>} - The newly updated circle
+   */
+  static async removeFromCircle(
+    ownerID: Types.ObjectId,
+    rank: number,
+    updateIDs: Array<string | Types.ObjectId>
+  ): Promise<HydratedDocument<Circle>> {
+    console.log("removing");
+    const allUpdates = [...new Set(updateIDs)].map((updateID) => {
+      return this.update(ownerID, rank, updateID, false);
+    });
+
+    await Promise.all(allUpdates);
+    return allUpdates[0]; // return circle
+  }
+
+  /**
+   * Update a circle with the new content
+   *
+   * @param {string} ownerID - circle author owns that user will be removed from
+   * @param {number} rank
+   * @param {string} updateIDs - The userIDs to be added
+   * @return {Promise<HydratedDocument<Circle>>} - The newly updated circle
+   */
+  static async addToCircle(
+    ownerID: Types.ObjectId,
+    rank: number,
+    updateIDs: Array<string | Types.ObjectId>
+  ): Promise<HydratedDocument<Circle>> {
+    console.log("adding");
+    const allUpdates = [...new Set(updateIDs)].map((updateID) => {
+      return this.update(ownerID, rank, updateID, true);
+    });
+
+    await Promise.all(allUpdates);
+    return allUpdates[0]; // return circle
   }
 
   /**
    * Delete a circle associated with given username.
    *
-   * @param {string} username - The freetId of freet to delete
-   * @param {number} level - The freetId of freet to delete
-   * @return {Promise<Boolean>} - true if the freet has been deleted, false otherwise
+   * @param {Types.ObjectId} ownerID
+   * @param {number} rank
+   * @return {Promise<Boolean>} - true if the circle has been deleted, false otherwise
    */
-  static async deleteOne(username: string, level: number): Promise<boolean> {
-    const circle = await CircleModel.deleteOne({
-      author: UserCollection.findOneByUsername(username),
-      level,
-    });
-    return circle !== null;
+  static async deleteOne(ownerID: string, rank: number): Promise<boolean> {
+    return (
+      (await CircleModel.deleteOne({
+        ownerID,
+        rank,
+      })) !== null
+    );
   }
 }
 
