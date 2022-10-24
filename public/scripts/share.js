@@ -5,20 +5,20 @@
  * e.g. for createUser, fields has properites 'username' and 'password'
  */
 
-const vallyEndpoint = "/api/vally";
+const shareEndpoint = "/api/shares";
 
-function viewAllVally(fields) {
-  fetch(vallyEndpoint).then(showResponse).catch(showResponse);
+function viewAllShare(fields) {
+  fetch(shareEndpoint).then(showResponse).catch(showResponse);
 }
 
-function viewVallyOfUsername(fields) {
-  fetch(`${vallyEndpoint}/${fields.username}`)
+function viewSharesOfUsername(fields) {
+  fetch(`${shareEndpoint}/${fields.username}`)
     .then(showResponse)
     .catch(showResponse);
 }
 
-function vallyAFreet(fields) {
-  fetch(vallyEndpoint, {
+function shareAFreet(fields) {
+  fetch(shareEndpoint, {
     method: "POST",
     body: JSON.stringify(fields),
     headers: { "Content-Type": "application/json" },
@@ -27,18 +27,8 @@ function vallyAFreet(fields) {
     .catch(showResponse);
 }
 
-function editVally(fields) {
-  fetch(`${vallyEndpoint}/${fields.vallyId}`, {
-    method: "PUT",
-    body: JSON.stringify(fields),
-    headers: { "Content-Type": "application/json" },
-  })
-    .then(showResponse)
-    .catch(showResponse);
-}
-
-function deleteVally(fields) {
-  fetch(`${vallyEndpoint}/${fields.vallyId}`, {
+function deleteShare(fields) {
+  fetch(`${shareEndpoint}/${fields.shareId}`, {
     method: "DELETE",
     body: JSON.stringify(fields),
     headers: { "Content-Type": "application/json" },

@@ -74,10 +74,15 @@ const formsAndHandlers = {
   "delete-circleMe": deleteCircleMe,
 
   "view-all-vally": viewAllVally,
-  "view-vally-by-username": viewVallyByUsername,
+  "view-vally-of-username": viewVallyOfUsername,
   "vally-a-freet": vallyAFreet,
   "edit-vally": editVally,
   "delete-vally": deleteVally,
+
+  "view-all-share": viewAllShare,
+  "view-shares-of-username": viewSharesOfUsername,
+  "share-a-freet": shareAFreet,
+  "delete-share": deleteShare,
 };
 
 // Attach handlers to forms

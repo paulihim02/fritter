@@ -1,15 +1,14 @@
 import type { HydratedDocument } from "mongoose";
 import moment from "moment";
-import type { Freet, PopulatedFreet } from "../freet/model";
-import { PopulatedVally } from "./model";
+import { PopulatedShare } from "./model";
 
 // Update this if you add a property to the Freet type!
-type VallyResponse = {
+type ShareResponse = {
   _id: string;
   freetId: string;
   freetContent: string;
-  valliedBy: string;
-  vallyStrength: number;
+  sharedWith: string;
+  sharedBy: string;
 };
 
 /**
@@ -22,30 +21,23 @@ const formatDate = (date: Date): string =>
   moment(date).format("MMMM Do YYYY, h:mm:ss a");
 
 /**
- * Transform a raw Vally object from the database into an object
+ * Transform a raw Share object from the database into an object
  * with all the information needed by the frontend
  *
- * @param {HydratedDocument<PopulatedVally>} vally
- * @returns {VallyResponse} - The vally object formatted for the frontend
+ * @param {HydratedDocument<PopulatedShare>} vally
+ * @returns {ShareResponse} - The share object formatted for the frontend
  */
-const constructVallyResponse = (
-  vally: HydratedDocument<PopulatedVally>
-): VallyResponse => {
-  const { freetId, userId } = vally;
-  console.log("vally util", {
-    _id: vally._id.toString(),
-    freetId: freetId._id.toString(),
-    freetContent: freetId.content,
-    valliedBy: userId.username,
-    vallyStrength: vally.points,
-  });
+const constructShareResponse = (
+  share: HydratedDocument<PopulatedShare>
+): ShareResponse => {
+  const { freetId, audienceId, sharedById } = share;
   return {
-    _id: vally._id.toString(),
+    _id: share._id.toString(),
     freetId: freetId._id.toString(),
     freetContent: freetId.content,
-    valliedBy: userId.username,
-    vallyStrength: vally.points,
+    sharedWith: audienceId.username,
+    sharedBy: sharedById.username,
   };
 };
 
-export { constructVallyResponse };
+export { constructShareResponse };

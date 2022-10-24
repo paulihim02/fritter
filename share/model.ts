@@ -12,13 +12,14 @@ import type { User } from "../user/model";
 export type Share = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   freetId: Types.ObjectId;
-  userId: Types.ObjectId;
-  points: number;
+  audienceId: Types.ObjectId;
+  sharedById: Types.ObjectId;
 };
 
 export type PopulatedShare = Share & {
   freetId: Freet;
-  userId: User;
+  audienceId: User;
+  sharedById: User;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -31,13 +32,18 @@ const ShareSchema = new Schema<Share>({
     required: true,
     ref: "Freet",
   },
-  userId: {
+  audienceId: {
     // Use Types.ObjectId outside of the schema
     type: Schema.Types.ObjectId,
     required: true,
     ref: "User",
   },
-  points: { type: Number, required: true },
+  sharedById: {
+    // Use Types.ObjectId outside of the schema
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
 });
 
 const ShareModel = model<Share>("Share", ShareSchema);

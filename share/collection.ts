@@ -1,7 +1,7 @@
 import type { HydratedDocument, Types } from "mongoose";
-import type { PopulatedVally } from "./model";
+import type { PopulatedShare } from "./model";
 import UserCollection from "../user/collection";
-import VallyModel from "./model";
+import ShareModel from "./model";
 
 /**
  * This files contains a class that has the functionality to explore freets
@@ -11,134 +11,145 @@ import VallyModel from "./model";
  */
 class VallyCollection {
   /**
-   * Add a Vally to the collection
+   * Add a Share to the collection
    *
-   * @param {Types.ObjectId} freetId - The freetId of the vally
-   * @param {Types.ObjectId} userId - The userId of the vally
-   * @param {number} points - points (positive/negative) based on strength of vally
-   * @return {Promise<HydratedDocument<PopulatedVally>>} - The newly created vally
+   * @param {Types.ObjectId} freetId - The freetId of the share
+   * @param {Types.ObjectId} audienceId - The Id of what freet will be shared with
+   * @param {Types.ObjectId} sharedById - The Id of who's sharing
+   * @return {Promise<HydratedDocument<PopulatedShare>>} - The newly created share
    */
   static async addOne(
     freetId: Types.ObjectId | string,
-    userId: Types.ObjectId | string,
-    points: number
-  ): Promise<HydratedDocument<PopulatedVally>> {
-    const vally = new VallyModel({
+    audienceId: Types.ObjectId | string,
+    sharedById: Types.ObjectId | string
+  ): Promise<HydratedDocument<PopulatedShare>> {
+    const share = new ShareModel({
       freetId,
-      userId,
-      points,
+      audienceId,
+      sharedById,
     });
 
-    await vally.save(); // Saves freet to MongoDB
-    return vally.populate("freetId userId");
+    await share.save(); // Saves freet to MongoDB
+    return share.populate("freetId audienceId sharedById");
   }
 
   /**
-   * Find a vally by freetId and userId
+   * Find a share by freetId and audienceId
    *
    * @param {string} freetId - The freetId associated with vally we want to find
-   * @param {string} userId - The userId associated with vally we want to find
-   * @return {Promise<HydratedDocument<PopulatedVally>> | Promise<null> } - The vally with the given freetId, if any
+   * @param {Types.ObjectId} audienceId - The Id associated with share we want to find
+   * @param {Types.ObjectId} sharedById - The Id of who's sharing
+   * @return {Promise<HydratedDocument<PopulatedShare>> | Promise<null> } the share, if any
    */
-  static async findOneByFreetUserId(
+  static async findOneByFreetAudienceSharedById(
     freetId: Types.ObjectId | string,
-    userId: Types.ObjectId | string
-  ): Promise<HydratedDocument<PopulatedVally>> {
-    return VallyModel.findOne({ freetId, userId }).populate("freetId userId");
+    audienceId: Types.ObjectId | string,
+    sharedById: Types.ObjectId | string
+  ): Promise<HydratedDocument<PopulatedShare>> {
+    return ShareModel.findOne({
+      freetId,
+      audienceId,
+      sharedById,
+    }).populate("freetId audienceId sharedById");
   }
+
   /**
-   * Find a vally by freetId
+   * Find a share by freetId
    *
-   * @param {string} freetId - The freetId associated with vally we want to find
-   * @return {Promise<HydratedDocument<PopulatedVally>> | Promise<null> } - The vally with the given freetId, if any
+   * @param {string} freetId - The freetId associated with share we want to find
+   * @return {Promise<HydratedDocument<PopulatedShare>> | Promise<null> } - The share with the given freetId, if any
    */
   static async findOneByFreetId(
     freetId: Types.ObjectId | string
-  ): Promise<HydratedDocument<PopulatedVally>> {
-    return VallyModel.findOne({ freetId }).populate("freetId userId");
+  ): Promise<HydratedDocument<PopulatedShare>> {
+    return ShareModel.findOne({ freetId }).populate(
+      "freetId audienceId sharedById"
+    );
   }
 
   /**
-   * Find a vally by userId
+   * Find a share by audienceId
    *
-   * @param {string} userId - The userId associated with vally we want to find
-   * @return {Promise<HydratedDocument<PopulatedVally>> | Promise<null> } - The vally with the given userId, if any
+   * @param {string} audienceId - The audienceId associated with share we want to find
+   * @return {Promise<HydratedDocument<PopulatedShare>> | Promise<null> } - The share with the given audienceId, if any
    */
-  static async findOneByUserId(
-    userId: Types.ObjectId | string
-  ): Promise<HydratedDocument<PopulatedVally>> {
-    return VallyModel.findOne({ userId }).populate("freetId userId");
+  static async findOneByAudienceId(
+    audienceId: Types.ObjectId | string
+  ): Promise<HydratedDocument<PopulatedShare>> {
+    return ShareModel.findOne({ audienceId }).populate(
+      "freetId audienceId sharedById"
+    );
   }
 
   /**
-   * Find a vally by vallyId
+   * Find a share by sharedById
    *
-   * @param {string} vallyId - The vallyId associated with vally we want to find
-   * @return {Promise<HydratedDocument<PopulatedVally>> | Promise<null> } - The vally with the given vallyId, if any
+   * @param {string} SharedById - The SharedById associated with share we want to find
+   * @return {Promise<HydratedDocument<PopulatedShare>> | Promise<null> } - The share with the given SharedById, if any
+   */
+  static async findOneBySharedById(
+    sharedById: Types.ObjectId | string
+  ): Promise<HydratedDocument<PopulatedShare>> {
+    return ShareModel.findOne({ sharedById }).populate(
+      "freetId audienceId sharedById"
+    );
+  }
+
+  /**
+   * Find share by shareId
+   *
+   * @param {string} shareId - The shareId associated with share we want to find
+   * @return {Promise<HydratedDocument<PopulatedShare>> | Promise<null> } - The share with the given shareId, if any
    */
   static async findOne(
     id: Types.ObjectId | string
-  ): Promise<HydratedDocument<PopulatedVally>> {
-    return VallyModel.findOne({ _id: id }).populate("freetId userId");
+  ): Promise<HydratedDocument<PopulatedShare>> {
+    return ShareModel.findOne({ _id: id }).populate(
+      "freetId audienceId sharedById"
+    );
   }
   /**
-   * Get all the refreets in the database
+   * Get all the share in the database
    *
-   * @return {Promise<HydratedDocument<PopulatedVally>[]>} - An array of all of the vallys
+   * @return {Promise<HydratedDocument<PopulatedShare>[]>} - An array of all of the share
    */
-  static async findAll(): Promise<Array<HydratedDocument<PopulatedVally>>> {
-    // Retrieves freets and sorts them from most to least recent
-    return VallyModel.find({}).populate("freetId userId");
+  static async findAll(): Promise<Array<HydratedDocument<PopulatedShare>>> {
+    return ShareModel.find({}).populate("freetId audienceId sharedById");
   }
 
   /**
-   * Get all the freets in by given author
+   * Get share s.t. sharedById is the author(username)
    *
-   * @param {string} username - The username of author of the vally
-   * @return {Promise<HydratedDocument<PopulatedVally>[]>} - An array of all of the vallys
+   * @param {string} username - The username of author of the share
+   * @return {Promise<HydratedDocument<PopulatedShare>[]>} - An array of all of the share
    */
   static async findAllByUsername(
     username: string
-  ): Promise<Array<HydratedDocument<PopulatedVally>>> {
+  ): Promise<Array<HydratedDocument<PopulatedShare>>> {
     const author = await UserCollection.findOneByUsername(username);
-    console.log("finding by username");
-    return VallyModel.find({ userId: author._id }).populate("freetId userId");
+    return ShareModel.find({ sharedById: author._id }).populate(
+      "freetId audienceId sharedById"
+    );
   }
 
   /**
-   * Update a refreet with the new points
+   * Delete a share with given shareId.
    *
-   * @param {string} points - The points that should be the updated vally
-   * @return {Promise<HydratedDocument<PopulatedVally>>} - The newly updated vally
-   */
-  static async updateOne(
-    vallyId: Types.ObjectId | string,
-    points: number
-  ): Promise<HydratedDocument<PopulatedVally>> {
-    const vally = await this.findOne(vallyId);
-    vally.points = points;
-    await vally.save();
-    return vally.populate("freetId userId");
-  }
-
-  /**
-   * Delete a vally with given vallyId.
-   *
-   * @param {string} vallyId - The vallyId of vally to delete
+   * @param {string} shareId - The shareId of vally to delete
    * @return {Promise<Boolean>} - true if the vally has been deleted, false otherwise
    */
-  static async deleteOne(vallyId: Types.ObjectId | string): Promise<boolean> {
-    const vally = await VallyModel.deleteOne({ _id: vallyId });
-    return vally !== null;
+  static async deleteOne(shareId: Types.ObjectId | string): Promise<boolean> {
+    const share = await ShareModel.deleteOne({ _id: shareId });
+    return share !== null;
   }
 
   /**
-   * Delete all the vally by the given freetId
+   * Delete all the share by the given filter
    *
    * @param {string} filter - The id of author of freets
    */
   static async deleteMany(filter: any): Promise<void> {
-    await VallyModel.deleteMany(...filter);
+    await ShareModel.deleteMany(...filter);
     return;
   }
 }

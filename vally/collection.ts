@@ -82,7 +82,7 @@ class VallyCollection {
     return VallyModel.findOne({ _id: id }).populate("freetId userId");
   }
   /**
-   * Get all the refreets in the database
+   * Get all the vally in the database
    *
    * @return {Promise<HydratedDocument<PopulatedVally>[]>} - An array of all of the vallys
    */
@@ -106,7 +106,7 @@ class VallyCollection {
   }
 
   /**
-   * Update a refreet with the new points
+   * Update a vally with the new points
    *
    * @param {string} points - The points that should be the updated vally
    * @return {Promise<HydratedDocument<PopulatedVally>>} - The newly updated vally
@@ -133,7 +133,7 @@ class VallyCollection {
   }
 
   /**
-   * Delete all the vally by the given freetId
+   * Delete all the vally by the given filter
    *
    * @param {string} filter - The id of author of freets
    */

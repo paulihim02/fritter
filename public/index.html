@@ -12,6 +12,7 @@
     <script src="/scripts/comments.js"></script>
     <script src="/scripts/circleMe.js"></script>
     <script src="/scripts/vally.js"></script>
+    <script src="/scripts/share.js"></script>
     <script src="/scripts/index.js"></script>
   </head>
 
@@ -485,8 +486,8 @@
               <input type="submit" value="view all vally" />
             </form>
 
-            <form id="view-vally-by-username">
-              <h3>view circleMe of user</h3>
+            <form id="view-vally-of-username">
+              <h3>view vally of user</h3>
               <div>
                 <label for="username">username:</label>
                 <input id="username" name="username" />
@@ -547,6 +548,43 @@
                 <input id="vallyId" name="vallyId" />
               </div>
               <input type="submit" value="delete vally" />
+            </form>
+          </div>
+
+          <div id="share-concept-content" style="display: block">
+            <form id="view-all-share">
+              <h3>view all share</h3>
+              <input type="submit" value="view all share" />
+            </form>
+
+            <form id="view-shares-of-username">
+              <h3>view shares of user</h3>
+              <div>
+                <label for="username">username:</label>
+                <input id="username" name="username" />
+              </div>
+              <input type="submit" value="view shares" />
+            </form>
+
+            <form id="share-a-freet">
+              <h3>share a freet</h3>
+              <div>
+                <label for="freetId">id of freet to share:</label>
+                <input id="freetId" name="freetId" />
+
+                <label for="audienceId">id of user to share to</label>
+                <input id="audienceId" name="audienceId" />
+              </div>
+              <input type="submit" value="share freet" />
+            </form>
+
+            <form id="delete-share">
+              <h3>delete share</h3>
+              <div>
+                <label for="shareId">id of share:</label>
+                <input id="shareId" name="shareId" />
+              </div>
+              <input type="submit" value="delete share" />
             </form>
           </div>
         </div>

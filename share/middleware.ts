@@ -1,98 +1,103 @@
 import type { Request, Response, NextFunction } from "express";
 import { Types } from "mongoose";
 import * as FreetValidator from "../freet/middleware";
-import VallyCollection from "./collection";
+import ShareCollection from "./collection";
 
 /**
  * Checks if a freet with freetId is req.params exists
  */
-const isVallyExists = async (
+const isShareExists = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
+  returnBool?: boolean
 ) => {
-  const vallyId = req.body.vallyId || req.params.vallyId || req.query.vallyId;
-  const freetId = req.body.freetId || req.params.freetId || req.query.freetId;
+  const shareId = req.body.shareId || req.params.shareId || req.query.shareId;
 
-  const vally = await VallyCollection.findOne(vallyId);
-  const vallyFreetId = await VallyCollection.findOneByFreetUserId(
+  const freetId = req.body.freetId || req.params.freetId || req.query.freetId;
+  const audienceId =
+    req.body.audienceId || req.params.audienceId || req.query.audienceId;
+
+  const sharedById =
+    req.body.sharedById || req.params.sharedById || req.query.sharedById;
+
+  const share = await ShareCollection.findOne(shareId);
+  const shareFreetAud = await ShareCollection.findOneByFreetAudienceSharedById(
     freetId,
-    req.session.userId
+    audienceId,
+    sharedById
   );
 
-  return !!vally || vallyFreetId
+  if (returnBool) {
+    return !!(share || shareFreetAud);
+  }
+
+  return !!(share || shareFreetAud)
     ? next()
-    : res.status(404).json({ error: "this vally could not be found" });
+    : res.status(404).json({ error: "share could not be found" });
 };
 
-const isVallyNotExist = async (
+const isShareNotExists = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const freetId = req.body.freetId || req.params.freetId || req.query.freetId;
-
-  const vally = await VallyCollection.findOneByFreetUserId(
-    freetId,
-    req.session.userId
-  );
-  return !vally
+  // console.log("from return", isShareExists(req, res, next, true));
+  return !(await isShareExists(req, res, next, true))
     ? next()
     : res.status(400).json({
-        message: "this vally already exists. do you want to edit it?",
+        message: "this share already exists. do you want to edit it?",
       });
 };
 
-const isValidVallyId = async (
+const isNotShareCycle = async (
+  // sharing something with yourself
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const vallyId = req.body.vallyId || req.params.vallyId || req.query.vallyId;
-  console.log("valid vallid", vallyId);
-  return Types.ObjectId.isValid(vallyId)
-    ? next()
-    : res.status(400).json({
-        message: "vallyId is not a valid vally Id",
-      });
+  const audienceId =
+    req.body.audienceId || req.params.audienceId || req.query.audienceId;
+
+  return audienceId === req.session.userId
+    ? res.status(400).json({ message: "cannot share something with yourself!" })
+    : next();
 };
 
-/**
- * Checks if the content of the freet in req.body is valid, i.e not a stream of empty
- * spaces and not more than 140 characters
- */
-const isValidVallyScore = (req: Request, res: Response, next: NextFunction) => {
-  const points = req.body.points || req.params.points || req.query.points;
-  return -5 <= points && points <= 5
-    ? next()
-    : res.status(400).json({
-        message: "vally points are outside of accepted ranges (-5 to 5)",
-      });
-};
-
-/**
- * Checks if the current user is the author of the freet whose freetId is in req.params
- */
-const isValidVallyModifier = async (
+const isValidShareId = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const vallyId = req.body.vallyId || req.params.vallyId || req.query.vallyId;
+  const shareId = req.body.shareId || req.params.shareId || req.query.shareId;
 
-  const vally = await VallyCollection.findOne(vallyId);
+  return Types.ObjectId.isValid(shareId)
+    ? next()
+    : res.status(400).json({
+        message: "shareId is not a valid Id",
+      });
+};
 
-  return vally.userId._id.toString() === req.session.userId
+const isValidShareModifier = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const shareId = req.body.shareId || req.params.shareId || req.query.shareId;
+
+  const share = await ShareCollection.findOne(shareId);
+
+  return share.sharedById._id.toString() === req.session.userId
     ? next()
     : res
         .status(403)
-        .json({ message: "you cannot modify another user's vally" });
+        .json({ message: "you cannot modify another user's share" });
 };
 
 export {
-  isValidVallyScore,
-  isVallyExists,
-  isVallyNotExist,
-  isValidVallyId,
-  isValidVallyModifier,
+  isShareExists,
+  isShareNotExists,
+  isValidShareId,
+  isValidShareModifier,
+  isNotShareCycle,
 };
