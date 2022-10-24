@@ -4,8 +4,15 @@ import FreetCollection from "./collection";
 import * as userValidator from "../user/middleware";
 import * as freetValidator from "../freet/middleware";
 import * as util from "./util";
+import FreetModel from "./model";
 
 const router = express.Router();
+
+router.use("/", async (req: Request, res: Response, next: NextFunction) => {
+  await FreetModel.deleteMany({ authorID: null });
+
+  return next();
+});
 
 /**
  * Get all the freets
