@@ -18,6 +18,12 @@ function viewCircleMeByUsername(fields) {
     .catch(showResponse);
 }
 
+function testCircleMeByUsername(fields) {
+  fetch(`${circleMeEndpoint}/test/${fields.circleMeId}/${fields.freetId}`)
+    .then(showResponse)
+    .catch(showResponse);
+}
+
 function createCircleMe(fields) {
   fetch(circleMeEndpoint, {
     method: "POST",

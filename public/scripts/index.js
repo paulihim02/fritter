@@ -69,6 +69,7 @@ const formsAndHandlers = {
 
   "view-all-circleMe": viewAllCircleMe,
   "view-circleMe-by-username": viewCircleMeByUsername,
+  "test-circleMe-by-username": testCircleMeByUsername,
   "create-circleMe": createCircleMe,
   "edit-circleMe": editCircleMe,
   "delete-circleMe": deleteCircleMe,

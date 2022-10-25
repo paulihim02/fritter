@@ -8,6 +8,7 @@ import CircleMeCollection from "./collection";
 import * as circleMeValidator from "./middleware";
 import * as circleValidator from "../circles/middleware";
 import * as util from "./util";
+import FreetCollection from "freet/collection";
 
 const router = express.Router();
 
@@ -31,13 +32,34 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     const { username } = req.params;
     const user = await UserCollection.findOneByUsername(username);
-    console.log("user is", user);
+    // console.log("user is", user);
     const circleMes = await CircleMeCollection.findAllByCircleId(user._id);
-    console.log("mes is", circleMes);
+    // console.log("mes is", circleMes);
 
     return res.status(201).json({
       message: "successly got circleMes for user",
       circleMes: circleMes.map(util.constructCircleMeResponse),
+    });
+  }
+);
+
+router.get(
+  "/test/:circleMeId/:freetId",
+  [
+    userValidator.isUserLoggedIn,
+    freetValidator.isFreetExists,
+    circleMeValidator.isCircleMeExists,
+    circleMeValidator.isFreetExistsCircleMe,
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { circleMeId } = req.params;
+    const circleMe = await CircleMeCollection.findOne(circleMeId);
+
+    return res.status(201).json({
+      message: "successly got circleMes for user",
+      canComment: circleMe.canComment,
+      canRefreet: circleMe.canRefreet,
+      canShare: circleMe.canShare,
     });
   }
 );
@@ -86,7 +108,7 @@ router.put(
   ],
   async (req: Request, res: Response) => {
     const { circleMeId, canComment, canShare, canRefreet } = req.body;
-    console.log(req.body);
+    // // console.log(req.body);
     const circleMe = await CircleMeCollection.update(
       circleMeId,
       canComment === "on",

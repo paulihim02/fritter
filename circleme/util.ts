@@ -27,7 +27,7 @@ const constructCircleMeResponse = (
     }),
   };
 
-  // console.log(circleMeCopy.);
+  // // console.log(circleMeCopy.);
   return {
     _id: circleMeCopy._id,
     circle: circleMeCopy.circleId,

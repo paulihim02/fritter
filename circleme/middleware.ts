@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
+import FreetCollection from "../freet/collection";
 import { Types } from "mongoose";
 import CircleMeCollection from "./collection";
 import CircleMeModel, { CircleMe } from "./model";
@@ -50,12 +51,35 @@ const isCircleMeExists = async (
 ) => {
   const circleMeId =
     req.body.circleMeId || req.query.circleMeId || req.params.circleMeId;
-  console.log(circleMeId);
+  console.log("heree3");
   return Types.ObjectId.isValid(circleMeId)
-    ? (await CircleMeCollection.findOne(circleMeId))
+    ? !!(await CircleMeCollection.findOne(circleMeId))
       ? next()
       : res.status(404).json({ message: "circle could not be found" })
     : res.status(400).json({ message: "circleMeId is not a valid ID" });
 };
 
-export { isAllowedToMakeCircleMe, isAllowedToUpdateCircle, isCircleMeExists };
+const isFreetExistsCircleMe = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { circleMeId, freetId } = req.params;
+
+  const freet = await FreetCollection.findOne(freetId);
+
+  const circleMe = await CircleMeCollection.findOne(circleMeId);
+
+  return circleMe.freetId._id.toString() === freet._id.toString()
+    ? next()
+    : res.status(400).json({
+        message: "this freet is not included in this circleMe",
+      });
+};
+
+export {
+  isAllowedToMakeCircleMe,
+  isAllowedToUpdateCircle,
+  isCircleMeExists,
+  isFreetExistsCircleMe,
+};

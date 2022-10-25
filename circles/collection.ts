@@ -17,7 +17,7 @@ class CircleCollection {
     ownerID: Types.ObjectId,
     rank: number
   ): Promise<HydratedDocument<Circle>> {
-    console.log("rank", rank);
+    // console.log("rank", rank);
     const newCircle = new CircleModel({
       ownerID,
       rank,
@@ -37,7 +37,7 @@ class CircleCollection {
     ownerID: string | Types.ObjectId,
     rank: number
   ): Promise<HydratedDocument<Circle>> {
-    console.log("finding Circle for", ownerID, rank);
+    // console.log("finding Circle for", ownerID, rank);
     return await CircleModel.findOne({
       ownerID,
       rank,
@@ -50,7 +50,7 @@ class CircleCollection {
    * @return {Promise<HydratedDocument<Circle>[]>} - An array of all the circles
    */
   static async findAll(): Promise<Array<HydratedDocument<Circle>>> {
-    console.log("finding All Circles!", await CircleModel.find({}));
+    // console.log("finding All Circles!", await CircleModel.find({}));
 
     return await CircleModel.find({}).populate("ownerID");
   }
@@ -82,11 +82,11 @@ class CircleCollection {
     updateID: string | Types.ObjectId,
     add: boolean
   ): Promise<HydratedDocument<Circle>> {
-    console.log("attempting to update user of ID:", updateID);
+    // console.log("attempting to update user of ID:", updateID);
 
     // we first get the circle
     const circle = await this.findOne(ownerID, rank);
-    console.log("circ", circle);
+    // console.log("circ", circle);
     // get userIds in the circle
     const { userIDs } = circle;
     const objectUpdateID = new Types.ObjectId(updateID);
@@ -103,9 +103,9 @@ class CircleCollection {
       objectUpdateID,
     ];
 
-    console.log("updated User IDs", updatedUserId);
+    // console.log("updated User IDs", updatedUserId);
     !add ? updatedUserId.pop() : "";
-    console.log("updated User IDs", updatedUserId);
+    // console.log("updated User IDs", updatedUserId);
 
     // update circle
     circle.userIDs = updatedUserId;
@@ -125,7 +125,7 @@ class CircleCollection {
     rank: number,
     updateIDs: Array<string | Types.ObjectId>
   ): Promise<HydratedDocument<Circle>> {
-    console.log("removing");
+    // console.log("removing");
     const allUpdates = [...new Set(updateIDs)].map((updateID) => {
       return this.update(ownerID, rank, updateID, false);
     });
@@ -147,7 +147,7 @@ class CircleCollection {
     rank: number,
     updateIDs: Array<string | Types.ObjectId>
   ): Promise<HydratedDocument<Circle>> {
-    console.log("adding");
+    // console.log("adding");
     const allUpdates = [...new Set(updateIDs)].map((updateID) => {
       return this.update(ownerID, rank, updateID, true);
     });
